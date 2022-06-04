@@ -6,6 +6,8 @@ from pyrogram import enums
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import FloodWait
 
+import time
+
 bot = Client(
     "LOCAL",
     api_id = int(os.environ["API_ID"]),
@@ -17,6 +19,18 @@ bot = Client(
 async def start(client: Client, message: Message):
     await client.send_message(message.chat.id, "Hello there")
 
+
+def TimeFormatter(milliseconds: int) -> str:
+    seconds, milliseconds = divmod(int(milliseconds), 1000)
+    minutes, seconds = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    days, hours = divmod(hours, 24)
+    tmp = ((str(days) + "d, ") if days else "") + \
+        ((str(hours) + "h, ") if hours else "") + \
+        ((str(minutes) + "m, ") if minutes else "") + \
+        ((str(seconds) + "s, ") if seconds else "") + \
+        ((str(milliseconds) + "ms, ") if milliseconds else "")
+    return tmp[:-2]
 
 def humanbytes(size):
     # https://stackoverflow.com/a/49361727/4723940
