@@ -31,7 +31,7 @@ def humanbytes(size):
         n += 1
     return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
 
-async def download_progress(current, total, download_message: Message, file_name: string, started_time: float):
+async def download_progress(current: int, total: int, download_message: Message, file_name: str, started_time: float):
     now = time.time()
     diff = now - started_time
     display_message = None
@@ -59,7 +59,7 @@ async def download_progress(current, total, download_message: Message, file_name
         except Exception as e:
             print(str(e))
 
-async def upload_progress(current, total, upload_message: Message, file_name: string, started_time: float):
+async def upload_progress(current: int, total: int, upload_message: Message, file_name: str, started_time: float):
     now = time.time()
     diff = now - started_time
     display_message = None
