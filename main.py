@@ -50,7 +50,7 @@ async def download_progress(current: int, total: int, download_message: Message,
     diff = now - started_time
     display_message = None
 
-    if round(diff % 5.00) == 0 or current != total:
+    if round(diff % 5.00) == 0:
         percentage = current * 100 / total
         speed = current / diff
         elapsed_time = round(diff) * 1000
@@ -78,7 +78,7 @@ async def upload_progress(current: int, total: int, upload_message: Message, fil
     diff = now - started_time
     display_message = None
 
-    if round(diff % 5.00) == 0 or current != total:
+    if round(diff % 5.00) == 0:
         percentage = current * 100 / total
         speed = current / diff
         elapsed_time = round(diff) * 1000
