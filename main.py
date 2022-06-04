@@ -30,7 +30,7 @@ def humanbytes(size):
         size /= power
         n += 1
     return str(round(size, 2)) + " " + Dic_powerN[n] + 'B'
-    
+
 async def download_progress(current: number, total: number, download_message: Message, file_name: string, started_time: float):
     now = time.time()
     diff = now - started_time
@@ -59,6 +59,34 @@ async def download_progress(current: number, total: number, download_message: Me
         except Exception as e:
             print(str(e))
 
+async def upload_progress(current: number, total: number, upload_message: Message, file_name: string, started_time: float):
+    now = time.time()
+    diff = now - started_time
+    display_message = None
+
+    if round(diff % 5.00) == 0 or current != total:
+        percentage = current * 100 / total
+        speed = current / diff
+        elapsed_time = round(diff) * 1000
+        time_to_completion = round(
+            (total - current) / speed) * 1000
+        estimated_total_time = elapsed_time + time_to_completion
+
+        try:
+            current_message = """**Upload Status**\n\nFile Name: {}\n\nFile Size: {}\n\nUploaded: {}\n\nETA: {}""".format(
+                            file_name,
+                            humanbytes(total),
+                            humanbytes(current),
+                            TimeFormatter(estimated_total_time)
+                        )
+            if current_message != display_message:
+                await upload_message.edit_text(
+                    text=current_message
+                )
+                display_message = current_message
+        except Exception as e:
+            print(str(e))
+
 async def deleteMessage(client: Client, message: Message):
     await client.delete_messages(chat_id=message.chat.id, message_ids=[message.message_id])
 
@@ -79,6 +107,8 @@ async def forwarded_video(client: Client, message: Message):
     started_time = time.time()
     download_message = await client.send_message(chat_id=message.chat.id, text="Starting to Download")
     await client.download_media(message, file_name=file_name, progress=download_progress, progress_args=(download_message, file_name, started_time))
+    upload_started_time = time.time()
+    await client.send_document(message.chat.id, document=file_name, progress=upload_progress, progress_args=(download_message, file_name, upload_started_time))
 
 print("PingAll is alive!")  
 bot.run()
