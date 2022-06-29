@@ -1,12 +1,15 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 import os
-import asyncio
 from pyrogram import enums
 from pyrogram.enums import ChatMemberStatus
 from pyrogram.errors import FloodWait
 
+from dotenv import load_dotenv
+
 import time
+
+load_dotenv()
 
 bot = Client(
     "LOCAL",
@@ -91,7 +94,7 @@ async def upload_progress(current: int, total: int, upload_message: Message, fil
                             file_name,
                             humanbytes(total),
                             humanbytes(current),
-                            TimeFormatter(estimated_total_time)
+                            TimeFormatter(time_to_completion)
                         )
             if current_message != display_message:
                 await upload_message.edit_text(
@@ -124,5 +127,6 @@ async def forwarded_video(client: Client, message: Message):
     upload_started_time = time.time()
     await client.send_document(message.chat.id, document=file_name, progress=upload_progress, progress_args=(download_message, file_name, upload_started_time))
 
-print("PingAll is alive!")  
+print("PingAll is alive!")
+
 bot.run()
